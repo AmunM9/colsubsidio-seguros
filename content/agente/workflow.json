@@ -1,0 +1,296 @@
+{
+  "edges": {
+    "edge_01kzg1start2saludo000001": {
+      "source": "start_node",
+      "target": "node_01kzg1saludo000000000001",
+      "forward_condition": {
+        "type": "unconditional",
+        "label": null
+      },
+      "backward_condition": null
+    },
+    "edge_01kzg1saludo2ofrecer0001": {
+      "source": "node_01kzg1saludo000000000001",
+      "target": "node_01kzg1ofrecer30000000001",
+      "forward_condition": {
+        "type": "unconditional",
+        "label": "Continuar a ofertas"
+      },
+      "backward_condition": null
+    },
+    "edge_01kzg1ofrecer2detalle001": {
+      "source": "node_01kzg1ofrecer30000000001",
+      "target": "node_01kzg1detalle00000000001",
+      "forward_condition": {
+        "label": "Eligió o pide detalle",
+        "type": "llm",
+        "condition": "El usuario eligió una póliza concreta de las ofrecidas, o pidió más información / más detalle / ver el valor de una póliza específica."
+      },
+      "backward_condition": null
+    },
+    "edge_01kzg1ofrecer2cerrar0001": {
+      "source": "node_01kzg1ofrecer30000000001",
+      "target": "node_01kzg1cerrar000000000001",
+      "forward_condition": {
+        "label": "Cerrar sin interés",
+        "type": "llm",
+        "condition": "El usuario indica claramente que ninguna opción le sirve, que lo va a pensar, que no desea continuar, o pide terminar. Decir 'cuéntame más de X' o 'me interesa X' NO cuenta como cierre."
+      },
+      "backward_condition": null
+    },
+    "edge_01kzg1detalle2datos00001": {
+      "source": "node_01kzg1detalle00000000001",
+      "target": "node_01kzg1datos0000000000001",
+      "forward_condition": {
+        "label": "Confirmó la póliza",
+        "type": "llm",
+        "condition": "El usuario confirmó claramente que quiere esa póliza (sí, esa me sirve, la quiero, continúo con esa). Ya se registró o debió registrarse con capturar_contacto campo poliza."
+      },
+      "backward_condition": null
+    },
+    "edge_01kzg1detalle2ofrecer001": {
+      "source": "node_01kzg1detalle00000000001",
+      "target": "node_01kzg1ofrecer30000000001",
+      "forward_condition": {
+        "label": "Quiere otra opción",
+        "type": "llm",
+        "condition": "El usuario quiere ver otra de las tres opciones, comparar con otra, o no quiere la póliza que se estaba detallando."
+      },
+      "backward_condition": null
+    },
+    "edge_01kzg1detalle2cerrar0001": {
+      "source": "node_01kzg1detalle00000000001",
+      "target": "node_01kzg1cerrar000000000001",
+      "forward_condition": {
+        "label": "Cerrar sin interés",
+        "type": "llm",
+        "condition": "El usuario indica claramente que no desea continuar, que lo va a pensar, o pide terminar."
+      },
+      "backward_condition": null
+    },
+    "edge_01kzg1datos2end000000001": {
+      "source": "node_01kzg1datos0000000000001",
+      "target": "node_01kzg1end000000000000001",
+      "forward_condition": {
+        "label": "Cierre listo",
+        "type": "llm",
+        "condition": "Ya se confirmaron los datos de contacto necesarios y se llamó a confirmar_reserva, o el agente ya se despidió indicando que puede continuar al pago."
+      },
+      "backward_condition": null
+    },
+    "edge_01kzg1cerrar2end00000001": {
+      "source": "node_01kzg1cerrar000000000001",
+      "target": "node_01kzg1end000000000000001",
+      "forward_condition": {
+        "type": "unconditional",
+        "label": null
+      },
+      "backward_condition": null
+    }
+  },
+  "nodes": {
+    "start_node": {
+      "type": "start",
+      "position": {
+        "x": 40,
+        "y": 0
+      },
+      "edge_order": [
+        "edge_01kzg1start2saludo000001"
+      ]
+    },
+    "node_01kzg1saludo000000000001": {
+      "type": "override_agent",
+      "position": {
+        "x": 40,
+        "y": 160
+      },
+      "edge_order": [
+        "edge_01kzg1saludo2ofrecer0001"
+      ],
+      "conversation_config": {
+        "turn": {
+          "turn_eagerness": null,
+          "spelling_patience": null,
+          "speculative_turn": null,
+          "retranscribe_on_turn_timeout": null
+        },
+        "tts": {
+          "voice_id": null
+        },
+        "conversation": {
+          "client_events": null
+        },
+        "agent": {
+          "prompt": {
+            "prompt": null,
+            "llm": null,
+            "built_in_tools": {}
+          }
+        }
+      },
+      "additional_prompt": "# OBJETIVO\nSaludar y pasar a ofrecer pólizas. Nada más.\n\nYa sabes: producto = {{categoria_legible}} (alias {{producto_interes}}), afiliado = {{es_afiliado}}.\n\n- Si {{nombre}} tiene valor: \"Hola, {{nombre}}. Veo que buscas {{categoria_legible}}.\"\n- Si {{nombre}} está vacío: \"Hola. Veo que buscas {{categoria_legible}}.\"\n\nDi en una frase corta que le vas a mostrar hasta tres opciones de esa categoría.\nNO preguntes si es afiliado. NO hagas perfilamiento. NO pidas celular ni correo.\nAvanza al siguiente nodo.",
+      "additional_knowledge_base": [],
+      "additional_tool_ids": [],
+      "label": "Saludo",
+      "entry_behavior": "auto"
+    },
+    "node_01kzg1ofrecer30000000001": {
+      "type": "override_agent",
+      "position": {
+        "x": 40,
+        "y": 380
+      },
+      "edge_order": [
+        "edge_01kzg1ofrecer2detalle001",
+        "edge_01kzg1ofrecer2cerrar0001"
+      ],
+      "conversation_config": {
+        "turn": {
+          "turn_eagerness": null,
+          "spelling_patience": null,
+          "speculative_turn": null,
+          "retranscribe_on_turn_timeout": null
+        },
+        "tts": {
+          "voice_id": null
+        },
+        "conversation": {
+          "client_events": null
+        },
+        "agent": {
+          "prompt": {
+            "prompt": null,
+            "llm": null,
+            "built_in_tools": {}
+          }
+        }
+      },
+      "additional_prompt": "# OBJETIVO\nOfrece hasta 3 pólizas de la categoría {{categoria}} / {{categoria_legible}}.\nSolo pólizas que estén en tu base de conocimiento. Usa nombres exactos.\nSi en la base hay menos de 3, ofrece las que haya.\n\n## Cómo presentarlas\n- En chat: puedes listar las 3 (nombre + beneficio principal de cada una).\n- En voz: máximo una o dos por turno; pregunta si quiere oír la siguiente.\n\nCierra preguntando: \"¿Cuál te interesa, o de cuál quieres más detalle?\"\n\n## PROHIBIDO\n- Inventar pólizas o precios.\n- Pedir celular, correo o cédula.\n- Llamar confirmar_reserva o end_call.\n- Ofrecer productos de otra categoría.\n\nSi elige una o pide detalle de una → deja que el flujo pase a Detalle.\nSi ninguna le sirve → Cerrar sin interés.",
+      "additional_knowledge_base": [],
+      "additional_tool_ids": [],
+      "label": "Ofrecer 3 pólizas",
+      "entry_behavior": "auto"
+    },
+    "node_01kzg1detalle00000000001": {
+      "type": "override_agent",
+      "position": {
+        "x": 40,
+        "y": 620
+      },
+      "edge_order": [
+        "edge_01kzg1detalle2datos00001",
+        "edge_01kzg1detalle2ofrecer001",
+        "edge_01kzg1detalle2cerrar0001"
+      ],
+      "conversation_config": {
+        "turn": {
+          "turn_eagerness": null,
+          "spelling_patience": null,
+          "speculative_turn": null,
+          "retranscribe_on_turn_timeout": null
+        },
+        "tts": {
+          "voice_id": null
+        },
+        "conversation": {
+          "client_events": null
+        },
+        "agent": {
+          "prompt": {
+            "prompt": null,
+            "llm": null,
+            "built_in_tools": {}
+          }
+        }
+      },
+      "additional_prompt": "# OBJETIVO\nSobre la póliza elegida o de la que pidió detalle, di en lenguaje llano (solo datos de la KB):\n1. Nombre exacto.\n2. Características / coberturas principales (1 a 3).\n3. Valor / precio si está en la KB. Si no está: \"El valor exacto lo confirma la aseguradora al cotizar.\" No inventes ni aproximes.\n\nLuego pregunta UNA cosa:\n\"¿Quieres esta, quieres ver otra de las tres, o te cuento más de esta?\"\n\n## Si confirma esa póliza\nRegístrala de inmediato:\ncapturar_contacto({\n  campo: \"poliza\",\n  valor: \"<nombre exacto de la KB>\"\n})\nNO te despidas. NO llames confirmar_reserva ni end_call. El flujo pasa a Datos.\n\n## Si quiere otra\nVuelve a Ofrecer 3.\n\n## Si pide más detalle\nResponde con la KB y vuelve a preguntar si la elige.\n\n## PROHIBIDO\n- Inventar precio.\n- confirmar_reserva.\n- Pedir celular/correo aquí (eso es en Datos).",
+      "additional_knowledge_base": [],
+      "additional_tool_ids": [],
+      "label": "Detalle y validar",
+      "entry_behavior": "auto"
+    },
+    "node_01kzg1datos0000000000001": {
+      "type": "override_agent",
+      "position": {
+        "x": 40,
+        "y": 880
+      },
+      "edge_order": [
+        "edge_01kzg1datos2end000000001"
+      ],
+      "conversation_config": {
+        "turn": {
+          "turn_eagerness": null,
+          "spelling_patience": null,
+          "speculative_turn": null,
+          "retranscribe_on_turn_timeout": null
+        },
+        "tts": {
+          "voice_id": null
+        },
+        "conversation": {
+          "client_events": null
+        },
+        "agent": {
+          "prompt": {
+            "prompt": null,
+            "llm": null,
+            "built_in_tools": {}
+          }
+        }
+      },
+      "additional_prompt": "# OBJETIVO\nLa póliza ya está elegida. Completa solo los datos que falten. No vendas más.\n\nOrden si falta algo: nombre → celular → email. De a uno.\nCada dato nuevo o corregido → capturar_contacto con campo nombre | celular | email.\n\n## Si {{es_afiliado}} == \"si\"\nYa tienes {{nombre}}, {{celular}}, {{email}}.\nConfirma en una frase sin leer el celular completo (solo últimos 4 dígitos):\n\"Confirmo: {{nombre}}, celular terminado en [últimos 4], correo {{email}}. ¿Está bien?\"\nSi corrige algo → capturar_contacto. No pidas de nuevo lo que ya está bien.\n\n## Si {{es_afiliado}} == \"no\"\nPide solo lo vacío. Tras cada respuesta → capturar_contacto.\nNo pidas canal ni franja (no son obligatorios para cerrar).\n\n## Cierre\nCuando tengas al menos nombre + (celular o email), y la póliza ya registrada:\n1. Di breve: listo, puede continuar al pago / contratación con la aseguradora.\n2. Llama confirmar_reserva({}).\n3. No digas nada más.\n\n## PROHIBIDO\n- Volver a recomendar pólizas.\n- Inventar datos.\n- Leer celular completo.",
+      "additional_knowledge_base": [],
+      "additional_tool_ids": [],
+      "label": "Datos de contacto",
+      "entry_behavior": "auto"
+    },
+    "node_01kzg1cerrar000000000001": {
+      "type": "override_agent",
+      "position": {
+        "x": -320,
+        "y": 620
+      },
+      "edge_order": [
+        "edge_01kzg1cerrar2end00000001"
+      ],
+      "conversation_config": {
+        "turn": {
+          "turn_eagerness": null,
+          "spelling_patience": null,
+          "speculative_turn": null,
+          "retranscribe_on_turn_timeout": null
+        },
+        "tts": {
+          "voice_id": null
+        },
+        "conversation": {
+          "client_events": null
+        },
+        "agent": {
+          "prompt": {
+            "prompt": null,
+            "llm": null,
+            "built_in_tools": {}
+          }
+        }
+      },
+      "additional_prompt": "# CIERRE SIN INTERÉS\nLa persona no desea continuar.\nNO intentes convencerla. NO ofrezcas más productos. NO preguntes por qué.\n\nDi exactamente esta idea:\n\"Claro, sin problema. Si más adelante quieres mirarlo, aquí estamos. Que estés muy bien.\"\n\nTermina ahí.",
+      "additional_knowledge_base": [],
+      "additional_tool_ids": [],
+      "label": "Cerrar sin interés",
+      "entry_behavior": "auto"
+    },
+    "node_01kzg1end000000000000001": {
+      "type": "end",
+      "position": {
+        "x": 40,
+        "y": 1120
+      },
+      "edge_order": [],
+      "return_when_nested": true
+    }
+  },
+  "prevent_subagent_loops": false
+}

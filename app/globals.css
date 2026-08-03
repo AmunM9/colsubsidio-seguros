@@ -1,0 +1,365 @@
+@import 'tailwindcss';
+
+/* ── Tokens ────────────────────────────────────────────────────────
+   Tokens de color de la demo. Ratios de contraste en content/research/05-contraste.md.
+   El amarillo NUNCA es texto sobre blanco (1.4:1). Es superficie o acento. */
+:root {
+  --amarillo: #ffd000;
+  --amarillo-80: #ffd933;
+  --amarillo-40: #fff2b3;
+  --azul: #0067b1;
+  --azul-80: #3385c1;
+  --azul-40: #99c2e0;
+  --grafito: #575756;
+  --grafito-60: #898988;
+  --grafito-20: #cfcfce;
+  --tinta: #1a1a19;
+
+  --fondo: #fafaf8;
+  --superficie: #ffffff;
+  --borde: rgb(87 87 86 / 0.12);
+  --borde-fuerte: rgb(87 87 86 / 0.28);
+  --exito: #1f7a4d;
+  --error: #b3261e;
+
+  --texto-cuerpo: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
+  --texto-titulo: clamp(1.5rem, 1.15rem + 1.6vw, 2.25rem);
+  --texto-display: clamp(2.75rem, 1.4rem + 5.6vw, 6rem);
+  --espacio-seccion: clamp(4rem, 3rem + 5vw, 9rem);
+  --radio: 18px;
+  --radio-lg: 28px;
+}
+
+@theme inline {
+  --color-amarillo: var(--amarillo);
+  --color-azul: var(--azul);
+  --color-grafito: var(--grafito);
+  --color-tinta: var(--tinta);
+  --color-fondo: var(--fondo);
+  --color-superficie: var(--superficie);
+  --font-display: var(--fuente-display);
+  --font-sans: var(--fuente-ui);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  /* Con reduced-motion las animaciones no se acortan: se resuelven al estado final. */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+body {
+  background: var(--fondo);
+  color: var(--grafito);
+  font-family: var(--fuente-ui), system-ui, sans-serif;
+  font-size: var(--texto-cuerpo);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--fuente-display), system-ui, sans-serif;
+  color: var(--tinta);
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+p {
+  max-width: 65ch;
+  text-wrap: pretty;
+}
+
+/* Foco visible en TODO momento. 5.62:1 contra el fondo, muy por encima del 3:1 de WCAG 2.2. */
+:focus-visible {
+  outline: 2px solid var(--azul);
+  outline-offset: 2px;
+}
+
+[aria-disabled='true'] {
+  cursor: not-allowed;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* El contenido siempre es visible; GSAP añade movimiento sin bloquear
+   lectura, foco de teclado ni el fallback sin JavaScript. */
+.revelar {
+  opacity: 1;
+}
+
+/* Hero compuesto con las cinco ilustraciones originales de Lemonade. */
+.hero-lemonade {
+  position: relative;
+  isolation: isolate;
+  left: 50%;
+  width: 100vw;
+  min-height: 690px;
+  margin-left: -50vw;
+  text-align: center;
+  background: linear-gradient(to top, #f7f7f7 27px, transparent 27px);
+}
+
+.hero-lemonade__contenido {
+  position: relative;
+  z-index: 2;
+  padding: 54px 24px 0;
+}
+
+.hero-lemonade__escena {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+/* La escena arranca oculta; el timeline del hero la revela DESPUÉS del copy. */
+.hero-lemonade:not(.hero-lemonade--escena-lista) .lemonade-scene__nubes,
+.hero-lemonade:not(.hero-lemonade--escena-lista) .lemonade-scene__imagenes {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-lemonade:not(.hero-lemonade--escena-lista) .lemonade-scene__nubes,
+  .hero-lemonade:not(.hero-lemonade--escena-lista) .lemonade-scene__imagenes {
+    opacity: 1;
+  }
+}
+
+.lemonade-scene,
+.lemonade-scene__imagenes {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.lemonade-scene__imagenes {
+  display: flex;
+}
+
+.lemonade-scene__columna {
+  position: relative;
+  flex: 1;
+}
+
+.lemonade-scene__centro {
+  flex: 0 0 10px;
+}
+
+.lemonade-scene img {
+  position: absolute;
+  display: block;
+  max-width: none;
+}
+
+.lemonade-scene__casa-izquierda,
+.lemonade-scene__detalle,
+.lemonade-scene__carro {
+  display: none !important;
+}
+
+.lemonade-scene__casa-derecha {
+  right: 0;
+  bottom: 0;
+  width: 461px;
+  height: 353px;
+}
+
+.lemonade-scene__persona {
+  right: -220px;
+  bottom: 5px;
+  height: 353px;
+  transform: translateX(-1px);
+}
+
+.lemonade-scene__nubes {
+  position: absolute;
+  z-index: -1;
+  top: 45%;
+  left: 0;
+  width: 100%;
+  height: 161px;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.lemonade-scene__nubes::after {
+  position: absolute;
+  inset: 0 auto auto 0;
+  width: 200vw;
+  min-width: 1000px;
+  height: 100%;
+  content: '';
+  background-image: url('/lemonade-hero/clouds.png');
+  background-repeat: repeat-x;
+  background-size: contain;
+  animation: nubes-lemonade-movil 60s -30s linear infinite;
+}
+
+@keyframes nubes-lemonade-movil {
+  to {
+    transform: translateX(-658px);
+  }
+}
+
+@keyframes nubes-lemonade-tablet {
+  to {
+    transform: translateX(-1271px);
+  }
+}
+
+@keyframes nubes-lemonade-escritorio {
+  to {
+    transform: translateX(-1451px);
+  }
+}
+
+@media (max-width: 425px) {
+  .lemonade-scene__casa-derecha {
+    right: auto;
+    left: 0;
+  }
+
+  .lemonade-scene__persona {
+    right: auto;
+    left: -95px;
+  }
+}
+
+@media (min-width: 768px) {
+  .hero-lemonade {
+    min-height: 660px;
+    background: linear-gradient(to top, #f7f7f7 56px, transparent 56px);
+  }
+
+  .hero-lemonade__contenido {
+    padding-top: 66px;
+  }
+
+  .lemonade-scene__imagenes {
+    top: 54px;
+    height: calc(100% - 54px);
+  }
+
+  .lemonade-scene__centro {
+    flex-basis: 444px;
+  }
+
+  .lemonade-scene__casa-izquierda,
+  .lemonade-scene__casa-derecha,
+  .lemonade-scene__detalle {
+    display: block !important;
+  }
+
+  .lemonade-scene__casa-izquierda {
+    right: 0;
+    bottom: 0;
+    width: 616px;
+    height: 472px;
+  }
+
+  .lemonade-scene__casa-derecha {
+    right: auto;
+    bottom: 0;
+    width: 616px;
+    height: 472px;
+  }
+
+  .lemonade-scene__detalle {
+    right: -7px;
+    bottom: -2px;
+    width: 781px;
+    height: 493px;
+  }
+
+  .lemonade-scene__persona {
+    right: auto;
+    bottom: -7px;
+    width: 781px;
+    height: 493px;
+  }
+
+  .lemonade-scene__nubes {
+    top: 20%;
+    height: 311px;
+  }
+
+  .lemonade-scene__nubes::after {
+    min-width: 0;
+    animation-name: nubes-lemonade-tablet;
+  }
+}
+
+@media (min-width: 1025px) {
+  .hero-lemonade {
+    min-height: 690px;
+  }
+
+  .lemonade-scene__carro {
+    right: -72px;
+    bottom: -13px;
+    display: block !important;
+    width: 680px;
+    height: 245px;
+  }
+
+  .lemonade-scene__nubes {
+    top: 23%;
+    height: 355px;
+  }
+
+  .lemonade-scene__nubes::after {
+    animation-name: nubes-lemonade-escritorio;
+  }
+}
+
+@media (min-width: 1670px) {
+  .lemonade-scene__imagenes {
+    justify-content: space-between;
+  }
+
+  .lemonade-scene__columna {
+    flex: 0 0 625px;
+  }
+
+  .lemonade-scene__casa-izquierda {
+    right: auto;
+    left: 0;
+  }
+
+  .lemonade-scene__detalle {
+    right: 4px;
+  }
+
+  .lemonade-scene__casa-derecha {
+    right: 0;
+    left: auto;
+  }
+
+  .lemonade-scene__persona {
+    right: -168px;
+    left: auto;
+    transform: translateX(1px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lemonade-scene__nubes::after {
+    animation: none;
+  }
+}
